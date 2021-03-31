@@ -30,6 +30,17 @@ public class Store implements Serializable {
 		return result;
 	}
 
+	public Iterator<Member> getMembers(Request request) {
+		LinkedList<Member> returnMembers = new LinkedList<Member>();
+		for (Member currentMember : members) {
+			System.out.println("currentMember is: " + currentMember);
+			if (currentMember.getName().contains(request.getMemberName())) {
+				returnMembers.add(currentMember);
+			}
+		}
+		return returnMembers.iterator();
+	}
+
 	private class MemberList implements Iterable<Member>, Serializable {
 		private static final long serialVersionUID = 1L;
 		private List<Member> members = new LinkedList<Member>();
@@ -53,7 +64,7 @@ public class Store implements Serializable {
 		@Override
 		public Iterator<Member> iterator() {
 			// TODO Auto-generated method stub
-			return null;
+			return members.iterator();
 		}
 	}
 }
