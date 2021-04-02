@@ -91,4 +91,12 @@ public class Member {
 		this.id = id;
 	}
 
+	/**
+	 * Adds a transaction to the member's transaction list
+	 * 
+	 * @param tran the transaction to be added
+	 */
+	public void addTransaction(Transaction tran) {
+		transactions.add(tran);
+	}
 }

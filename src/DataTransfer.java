@@ -1,5 +1,10 @@
 
 public abstract class DataTransfer {
+	private String productID;
+	private String productName;
+	private int productStock;
+	private double productPrice;
+	private int productReorderLevel;
 	private String memberName;
 	private String memberAddress;
 	private String memberPhone;
@@ -46,6 +51,51 @@ public abstract class DataTransfer {
 		memberName = member.getName();
 		memberPhone = member.getPhone();
 		memberAddress = member.getAddress();
+	}
+
+	public void setProductId(String input) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public String getProductID() {
+		return productID;
+	}
+
+	public void setProductID(String productID) {
+		this.productID = productID;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public int getProductStock() {
+		return productStock;
+	}
+
+	public void setProductStock(int productStock) {
+		this.productStock = productStock;
+	}
+
+	public double getProductPrice() {
+		return productPrice;
+	}
+
+	public void setProductPrice(double productPrice) {
+		this.productPrice = productPrice;
+	}
+
+	public int getProductReorderLevel() {
+		return productReorderLevel;
+	}
+
+	public void setProductReorderLevel(int productReorderLevel) {
+		this.productReorderLevel = productReorderLevel;
 	}
 
 	private void reset() {

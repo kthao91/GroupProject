@@ -62,4 +62,5 @@ public class Request extends DataTransfer {
 	public void setSecondDate(Calendar secondDate) {
 		this.secondDate = secondDate;
 	}
+
 }

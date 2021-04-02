@@ -1,7 +1,14 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
+
+import business.facade.Request;
+import bussiness.entites.Transaction;
 
 public class UserInterface {
 	private static UserInterface userInterface;
@@ -72,6 +79,20 @@ public class UserInterface {
 		}
 	}
 
+	public Calendar getDate(String prompt) {
+		do {
+			try {
+				Calendar date = new GregorianCalendar();
+				String item = getInput(prompt);
+				DateFormat dateFormat = SimpleDateFormat.getDateInstance(DateFormat.SHORT);
+				date.setTime(dateFormat.parse(item));
+				return date;
+			} catch (Exception fe) {
+				System.out.println("Please input a date as mm/dd/yy");
+			}
+		} while (true);
+	}
+
 	public void enrollMember() {
 		Request.instance().setMemberName(getInput("Member Name: "));
 		Request.instance().setMemberAddress(getInput("Member Address: "));
@@ -94,6 +115,36 @@ public class UserInterface {
 		while (m.hasNext()) {
 			Member member = m.next();
 			System.out.println(member.getName());
+		}
+	}
+
+	/**
+	 * Method to be called for displaying transactions. Prompts the user for the
+	 * appropriate values and uses the appropriate Store method for displaying
+	 * transactions.
+	 * 
+	 */
+	public void getTransactions() {
+		Request.instance().setMemberID(getInput("Enter member id"));
+		Request.instance().setFirstDate(getDate("Please enter the first date for which you want records as mm/dd/yy"));
+		Request.instance().setSecondDate(getDate("Please enter the last date for which you want records as mm/dd/yy"));
+		Iterator<Transaction> result = store.getTransactions(Request.instance());
+		while (result.hasNext()) {
+			Transaction transaction = (Transaction) result.next();
+			System.out.println(transaction);
+		}
+		System.out.println("\n End of transactions \n");
+	}
+
+	public void changePrice() {
+		Request.instance().setProductId(getInput("Enter id: "));
+		Request.instance().setProductPrice(Double.parseDouble(getInput("Enter new price: ")));
+		Result result = store.instance().changePrice(Request.instance());
+		if (result.getResultCode() != Result.OPERATION_COMPLETED) {
+			System.out.println("Product price could not be changed.");
+		} else {
+			System.out.println("Product " + result.getProductName() + " price has been changed to "
+					+ result.getProductPrice() + ".");
 		}
 	}
 
