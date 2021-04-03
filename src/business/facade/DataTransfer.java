@@ -1,3 +1,6 @@
+package business.facade;
+
+import bussiness.entites.*;
 
 public abstract class DataTransfer {
 	private String productID;
@@ -9,6 +12,8 @@ public abstract class DataTransfer {
 	private String memberAddress;
 	private String memberPhone;
 	private String memberID;
+	private int quantity;
+	private String orderID;
 
 	public DataTransfer() {
 		reset();
@@ -98,10 +103,39 @@ public abstract class DataTransfer {
 		this.productReorderLevel = productReorderLevel;
 	}
 
+	/**
+	 * Sets all product fields using a Product object
+	 * 
+	 * @param pro the product to set the fields to
+	 */
+	public void setProductFields(Product pro) {
+		this.productName = pro.getName();
+		this.productStock = pro.getOnHands();
+		this.productID = pro.getId();
+		this.productPrice = pro.getPrice();
+		this.productReorderLevel = pro.getReorderLevel();
+	}
+
 	private void reset() {
 		memberName = "none";
 		memberAddress = "none";
 		memberPhone = "none";
 		memberID = "none";
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public String getOrderID() {
+		return orderID;
+	}
+
+	public void setOrderID(String orderID) {
+		this.orderID = orderID;
 	}
 }

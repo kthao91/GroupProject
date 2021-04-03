@@ -1,9 +1,16 @@
+package bussiness.entites;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import business.entities.iterator.*;
+import business.facade.*;
 
 public class Member {
 	private static int idCounter;
@@ -89,6 +96,16 @@ public class Member {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/**
+	 * Saves the idCounter object
+	 * 
+	 * @param output file
+	 * @throws IOException if idCounter cannot be saved
+	 */
+	public static void save(ObjectOutputStream output) throws IOException {
+		output.writeObject(idCounter);
 	}
 
 	/**
