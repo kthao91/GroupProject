@@ -1,9 +1,8 @@
 package bussiness.entites;
+
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 
 /**
  * Transaction object to allow each purchase made by a member to be stored in

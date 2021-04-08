@@ -13,6 +13,7 @@ import bussiness.entites.*;
 import business.entities.iterator.*;
 
 public class Store implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private static Store store;
 	private MemberList members = new MemberList();
 	private OrderList orders = new OrderList();
@@ -175,7 +176,7 @@ public class Store implements Serializable {
 		 * @param product the product to be inserted
 		 * @return true if the product could be inserted, false if not
 		 */
-		public boolean insertProdcut(Product product) {
+		public boolean insertProduct(Product product) {
 			return products.add(product);
 		}
 

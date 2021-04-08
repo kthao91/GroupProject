@@ -3,25 +3,29 @@ package ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.List;
 
-import business.facade.*;
-import bussiness.entites.*;
+import Test.Test;
+import entities.*;
+import facade.*;
 
+/**
+ * This is the main interface to run the program. The user will be prompted to
+ * eneter a command in a form of an integer and will do the following
+ * 
+ * @author Koua
+ *
+ */
 public class UserInterface {
+
 	private static UserInterface userInterface;
-	private static Store store;
 	private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	private static final int EXIT = 0;
 	private static final int ENROLL_MEMBER = 1;
 	private static final int REMOVE_MEMBER = 2;
 	private static final int ADD_PRODUCT = 3;
-	private static final int CHECK_ITEM = 4;
+	private static final int CHECK_OUT_ITEM = 4;
 	private static final int PROCESS_SHIPMENT = 5;
 	private static final int CHANGE_PRICE = 6;
 	private static final int GET_PRODUCT_INFO = 7;
@@ -33,20 +37,32 @@ public class UserInterface {
 	private static final int SAVE = 13;
 	private static final int HELP = 14;
 
+	/**
+	 * When the UserInterface is call it will ask the user to enter a yes to load
+	 * the datebase
+	 */
 	private UserInterface() {
-		if (getInput("Look for saved data and  use it? yes or no: ") == "yes") {
-			// retrieve();
+		if (getInput("Look for saved data and  use it? For yes type 'yes' or type anything for no: ").toLowerCase()
+				.equals("yes")) {
+			Store.instance().reload();
+		} else if (getInput("Do you want to generate a test bed and invoke the functionality using asserts?: ")
+				.toLowerCase().equals("yes")) {
+			new Test();
+
 		} else {
-			store = Store.instance();
+			Store.instance();
 		}
 	}
 
+	/**
+	 * This will show at the beginning and will display when prompted
+	 */
 	public void help() {
 		System.out.println(EXIT + " Exit");
 		System.out.println(ENROLL_MEMBER + " Enroll a Member");
 		System.out.println(REMOVE_MEMBER + " Remove a Member");
 		System.out.println(ADD_PRODUCT + " Add a product");
-		System.out.println(CHECK_ITEM + " Check Item");
+		System.out.println(CHECK_OUT_ITEM + " Check Out Item");
 		System.out.println(PROCESS_SHIPMENT + " Process shipment");
 		System.out.println(CHANGE_PRICE + " Change Price");
 		System.out.println(GET_PRODUCT_INFO + " Get Product Info");
@@ -60,6 +76,11 @@ public class UserInterface {
 
 	}
 
+	/**
+	 * Singleton Pattern
+	 * 
+	 * @return userInterface
+	 */
 	public static UserInterface instance() {
 		if (userInterface == null) {
 			return userInterface = new UserInterface();
@@ -68,6 +89,12 @@ public class UserInterface {
 		}
 	}
 
+	/**
+	 * This will ask the user to enter a string
+	 * 
+	 * @param prompt String Sentence that will be display to user
+	 * @return String User input
+	 */
 	private String getInput(String prompt) {
 		while (true) {
 			String line = null;
@@ -83,103 +110,62 @@ public class UserInterface {
 	}
 
 	/**
-	 * Gets a token after prompting
+	 * This will ask the user to enter a int and make sure its a int
 	 * 
-	 * @param prompt - whatever the user wants as prompt
-	 * @return - the token from the keyboard
-	 * 
+	 * @param prompt String Sentence that will be display to user
+	 * @return int return user input
 	 */
-	public String getToken(String prompt) {
-		do {
+	private int getInputInt(String prompt) {
+		int returnInt = 0;
+		while (true) {
+			String line = null;
 			try {
 				System.out.println(prompt);
-				String line = reader.readLine();
-				StringTokenizer tokenizer = new StringTokenizer(line, "\n\r\f");
-				if (tokenizer.hasMoreTokens()) {
-					return tokenizer.nextToken();
-				}
-			} catch (IOException ioe) {
-				System.exit(0);
+				line = reader.readLine();
+				returnInt = Integer.parseInt(line);
+				return returnInt;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NumberFormatException ne) {
+				System.out.println("Please type in a number: ");
 			}
-		} while (true);
+		}
 	}
 
 	/**
-	 * Converts the string to a number
+	 * This will ask the user to enter a double and make sure its a double
 	 * 
-	 * @param prompt the string for prompting
-	 * @return the integer corresponding to the string
-	 * 
+	 * @param prompt String Sentence that will be display to user
+	 * @return double return user input
 	 */
-	public int getNumber(String prompt) {
-		do {
+	private double getInputDouble(String prompt) {
+		double returnDouble = 0;
+		while (true) {
+			String line = null;
 			try {
-				String item = getToken(prompt);
-				Integer number = Integer.valueOf(item);
-				return number.intValue();
-			} catch (NumberFormatException nfe) {
-				System.out.println("Please input a number ");
+				System.out.println(prompt);
+				line = reader.readLine();
+				returnDouble = Double.parseDouble(line);
+				return returnDouble;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NumberFormatException ne) {
+				System.out.println("Please type in a number: ");
 			}
-		} while (true);
-	}
-
-	public double getDouble(String prompt) {
-		do {
-			try {
-				String item = getToken(prompt);
-				double number = Double.parseDouble(item);
-				return number;
-			} catch (NumberFormatException nfe) {
-				System.out.println("Please input a number");
-			}
-		} while (true);
-	}
-
-	private boolean yesOrNo(String prompt) {
-		String more = getToken(prompt + " (Y|y)[es] or anything else for no");
-		if (more.charAt(0) != 'y' && more.charAt(0) != 'Y') {
-			return false;
 		}
-		return true;
 	}
 
-	public Calendar getDate(String prompt) {
-		do {
-			try {
-				Calendar date = new GregorianCalendar();
-				String item = getInput(prompt);
-				DateFormat dateFormat = SimpleDateFormat.getDateInstance(DateFormat.SHORT);
-				date.setTime(dateFormat.parse(item));
-				return date;
-			} catch (Exception fe) {
-				System.out.println("Please input a date as mm/dd/yy");
-			}
-		} while (true);
-	}
-
+	/**
+	 * Ask user to enter Member name, address, and phone then pass it to the store
+	 * class via the Request
+	 */
 	public void enrollMember() {
 		Request.instance().setMemberName(getInput("Member Name: "));
 		Request.instance().setMemberAddress(getInput("Member Address: "));
 		Request.instance().setMemberPhone(getInput("Phone: "));
 		Store.instance().addMember(Request.instance());
-	}
-
-	public void getMemberInfo() {
-		Request.instance().setMemberName(getInput("Member name to search: "));
-		Iterator<Member> m = Store.instance().getMembers(Request.instance());
-		while (m.hasNext()) {
-			Member member = m.next();
-			System.out.println(member.getName());
-		}
-	}
-
-	public void listAllMembers() {
-		Request.instance().setMemberName("");
-		Iterator<Member> m = Store.instance().getMembers(Request.instance());
-		while (m.hasNext()) {
-			Member member = m.next();
-			System.out.println(member.getName());
-		}
 	}
 
 	/**
@@ -188,165 +174,224 @@ public class UserInterface {
 	public void removeMember() {
 		Request.instance().setMemberID(getInput("Member ID: "));
 		int code = Store.instance().removeMember(Request.instance()).getResultCode();
-		if (code == 7) {
+		if (code == Result.OPERATION_COMPLETED) {
 			System.out.println("Sucuessfully remove Member");
-		} else if (code == 3) {
+		} else if (code == Result.OPERATION_FAILED) {
 			System.out.println("Invaild Member ID");
 		}
 	}
 
 	/**
-	 * Method to be called for adding a product to the Store. Prompts the user for
-	 * the appropriate values and uses the Store method for adding a product to the
-	 * Store.
+	 * Ask user for product name, price, reorder level, and stock then pass it
+	 * though to the store class to add
 	 */
 	public void addProduct() {
-		Request.instance().setProductName(getInput("Enter product name"));
-		Request.instance().setProductID(getInput("Enter product ID"));
-		Request.instance().setProductStock(getNumber("Enter on hands"));
-		Request.instance().setProductPrice(getDouble("Enter current price"));
-		Request.instance().setProductReorderLevel(getNumber("Enter reorder level"));
-		Result result = store.addProduct(Request.instance());
-		if (result.getResultCode() == Result.OPERATION_COMPLETED) {
-			System.out.println("Product Added!");
-			System.out.println("New product: " + Request.instance().getProductReorderLevel() * 2 + " units ordered");
+		Request.instance().setProductName(getInput("Product Name: "));
+		Request.instance().setProductID(getInput("Produc ID: "));
+		Request.instance().setProductPrice(getInputDouble("Product Price: "));
+		Request.instance().setProductReorderLevel(getInputInt("Reorder Level: "));
+		Request.instance().setProductStock(getInputInt("Product Stock: "));
+		int code = Store.instance().addProduct(Request.instance()).getResultCode();
+		if (code == 8) {
+			System.out.println("Fail to add Product");
+		} else if (code == 7) {
+			System.out.println("Sucessfully to add Product");
 		}
 	}
 
 	/**
-	 * Method to be called to retrieve information on any products that start with a
-	 * certain String. Prompts the user for the appropriate values and uses the
-	 * store method for retrieving that information
+	 * when checking out he user will have to type in the product id and amount and
+	 * then save to transaction and will ask if the user wants to another to the
+	 * transaction.
 	 */
-	private void retrieveProductInfo() {
-		Request.instance().setProductName(getInput("Enter product name "));
-		Iterator<Product> result = store.retrieveProductInfo(Request.instance());
-		if (result.hasNext()) {
-			System.out.println("Name \t ID \t Price \t On Hands \t Reorder Level");
-			while (result.hasNext()) {
-				Product pro = result.next();
-				System.out.println(pro.getId() + "\t" + pro.getId() + "\t " + pro.getPrice() + "\t " + pro.getOnHands()
-						+ "\t\t  " + pro.getReorderLevel());
+	public void checkOut() {
+		String done = "no";
+		String input = "YES";
+		System.out.println("Type 'No' to end check out");
+		Request.instance().setMemberID(getInput("Member ID to search: "));
+		Iterator<Member> members = Store.instance().getMembers(Request.instance());
+		if (members.hasNext()) {
+			while (!input.equals(done)) {
+				String productID = getInput("Product ID: ");
+				int amount = getInputInt("Amount: ");
+				Request.instance().addTransaction(productID, amount);
+				input = getInput("For no type 'no' otherwise type anything for yes\nDo you want to add more: ")
+						.toLowerCase();
+			}
+			Iterator<String> transaction = Store.instance().checkOut(Request.instance());
+			while (transaction.hasNext()) {
+				System.out.println(transaction.next());
 			}
 		} else {
-			System.out.println("No item found ");
+			System.out.println("Member ID is Invaild");
+		}
+
+	}
+
+	/**
+	 * This will process a pending order then remove the order. After it will
+	 * display the productID, product Name, stock
+	 */
+	public void processShippment() {
+		String done = "Yes";
+		while (!done.equals("no")) {
+			Request.instance().setOrderID(getInput("Please type in your order ID: "));
+			Result result = Store.instance().processShipment(Request.instance());
+			String productID = Request.instance().getProductID();
+			if (result.getResultCode() != Result.OPERATION_COMPLETED) {
+				System.out.println("Invaild Order");
+			} else {
+				String productName = Request.instance().getProductName();
+				int stock = Request.instance().getProductStock();
+				System.out.println(productID + " " + productName + " " + stock);
+			}
+			done = getInput("For no type 'no' otherwise type anything for yes \nDo you want to process more?: ")
+					.toLowerCase();
+
 		}
 	}
 
 	/**
-	 * Method to be called for displaying transactions. Prompts the user for the
-	 * appropriate values and uses the appropriate Store method for displaying
-	 * transactions.
-	 * 
+	 * Grab the member name and pass it the store to return the list of members with
+	 * containing name then printer name, addres, feePaid, getID
 	 */
-	public void getTransactions() {
-		Request.instance().setMemberID(getInput("Enter member id"));
-		Request.instance().setFirstDate(getDate("Please enter the first date for which you want records as mm/dd/yy"));
-		Request.instance().setSecondDate(getDate("Please enter the last date for which you want records as mm/dd/yy"));
-		Iterator<Transaction> result = store.getTransactions(Request.instance());
-		while (result.hasNext()) {
-			Transaction transaction = (Transaction) result.next();
-			System.out.println(transaction);
+	public void getMemberInfo() {
+		// displays the member’s address, feepaid, and id
+		Request.instance().setMemberName(getInput("Member name to search: "));
+		Iterator<Member> members = Store.instance().getMembers(Request.instance());
+		while (members.hasNext()) {
+			Member member = members.next();
+			System.out.println("Member Name: " + member.getName());
+			System.out.println("Member Address: " + member.getAddress());
+			System.out.println("Fee Paid: " + member.getFeePaid());
+			System.out.println("Member ID: " + member.getId());
+
 		}
-		System.out.println("\n End of transactions \n");
 	}
 
+	/**
+	 * return all the members that in the system.
+	 */
+	public void listAllMembers() {
+		// Display the name, date joined, address, and phone number
+		Request.instance().setMemberName("");
+		Iterator<Member> m = Store.instance().getMembers(Request.instance());
+		while (m.hasNext()) {
+			Member member = m.next();
+			System.out.println();
+			System.out.println("Member Name: " + member.getName());
+			System.out.println("Member Date Join: " + member.getDateJoin());
+			System.out.println("Member Address: " + member.getAddress());
+			System.out.println("Member Phone: " + member.getPhone());
+
+		}
+	}
+
+	/**
+	 * Ask the user to enter in the product ID and the price change. If there is a
+	 * productID matching it will change the price. If not then it will print
+	 * invaild id.
+	 */
 	public void changePrice() {
-		Request.instance().setProductId(getInput("Enter id: "));
-		Request.instance().setProductPrice(Double.parseDouble(getInput("Enter new price: ")));
-		Result result = store.instance().changePrice(Request.instance());
-		if (result.getResultCode() != Result.OPERATION_COMPLETED) {
-			System.out.println("Product price could not be changed.");
-		} else {
-			System.out.println("Product " + result.getProductName() + " price has been changed to "
-					+ result.getProductPrice() + ".");
+		// product name and the new price
+		Request.instance().setProductID(getInput("Type in product ID to change price: "));
+		Request.instance().setProductPrice(getInputDouble("Type in price change: "));
+		Result result = Store.instance().changePrice(Request.instance());
+		if (result.getResultCode() == Result.OPERATION_COMPLETED) {
+			System.out.println();
+			System.out.println("Product Name: " + Request.instance().getProductName());
+			System.out.println("New Price: " + Request.instance().getProductPrice());
+		} else if (result.getResultCode() == Result.PRODUCT_ID_INVAILD) {
+			System.out.println("Product ID is not invaild");
 		}
 	}
 
 	/**
-	 * Method to be called to find any outstanding (non-fulfilled) orders
+	 * Asked for memeberID and dates. Print out what returns.
 	 */
-	private void outstandingOrders() {
-		Iterator<Order> result = store.retrieveOutstandingOrders();
-		if (result.hasNext()) {
-			System.out.println("ID \t Product \t date \t quantity");
-			while (result.hasNext()) {
-				Order order = result.next();
-				System.out.println(order.getOrderNumber() + "\t" + order.getProductName() + "\t" + order.getDate()
-						+ "\t" + order.getQuantity());
+	public void printTransaction() {
+		Request.instance().setMemberID(getInput("Please enter Member ID: "));
+		Request.instance().setDate1(getInput("Please enter in the earlier date. mm/dd/yyyy: "));
+		Request.instance().setDate2(getInput("Please enter in the later date. mm/dd/yyyy: "));
+		Iterator<Transaction> tranactions = Store.instance().printTransaction(Request.instance());
+		while (tranactions.hasNext()) {
+			List<String> productTransaction = tranactions.next().getTransaction();
+			for (String tranactionString : productTransaction) {
+				System.out.println(tranactionString);
 			}
 		}
 	}
 
 	/**
-	 * Method to be called for processing a new shipment of products. Prompts the
-	 * user for the appropriate values and uses the appropriate Store method for
-	 * processing a shipment
+	 * Return all outstanding orders
 	 */
-	private void processShipment() {
-		Request.instance().setOrderID(getToken("Enter Order Number"));
-		Result result = store.processShipment(Request.instance());
-		if (result.getResultCode() == Result.OPERATION_COMPLETED) {
-			System.out.println("Order Processed successfully!");
-		} else {
-			System.out.println("ERROR: Order not processed");
+	public void listOutstandings() {
+		Iterator<String> order = Store.instance().getAllOrder();
+		System.out.println(order.hasNext());
+		while (order.hasNext()) {
+			System.out.println(order.next());
 		}
 	}
 
 	/**
-	 * Method to be called to allow a member to checkout their items. The cashier
-	 * checkouts one item at a time and is prompted to input the appropriate values.
-	 * Then the appropriate store methods are called to checkout the member and add
-	 * a transaction object to the member
+	 * ask for product name and will print everything with a similar name
 	 */
-	public void checkout() {
-		String output = "";
-		Request.instance().setMemberID(getToken("Enter member ID"));
-		Iterator member = store.getMembers(Request.instance());
-		if (member.hasNext()) {
-			System.out.println("ERROR: no such member");
+	public void getProductInfo() {
+		// List the product name, product id, price, stock in hand, and reorder level.
+		Request.instance().setProductName(getInput("Product Name: "));
+		Iterator<Product> products = Store.instance().getProduct(Request.instance());
+		while (products.hasNext()) {
+			// product name, product id, price, stock in hand, and reorder level.
+			Product product = products.next();
+			System.out.println();
+			System.out.println("Product Name: " + product.getName());
+			System.out.println("Product ID: " + product.getID());
+			System.out.println("Product Price: " + product.getPrice());
+			System.out.println("Product Stock: " + product.getStock());
+			System.out.println("Product Reorder Level: " + product.getReorderLevel());
+
 		}
-		do {
-			Request.instance().setProductID(getToken("Enter the ID of the item"));
-			Request.instance().setQuantity(getNumber("Enter the quantity of the item"));
-			Result result = store.checkout(Request.instance());
-			output = output + result.getProductID() + " " + Request.instance().getProductStock() + " "
-					+ result.getProductPrice() + " " + result.getProductPrice() * Request.instance().getProductStock()
-					+ "\n";
-			System.out.println(output);
-		} while (yesOrNo("Checkout more items?"));
-		store.addTransaction(output, Request.instance());
+
 	}
 
 	/**
-	 * Displays all products
+	 * Print all the product info.
 	 */
-	public void getProducts() {
-		Iterator<Result> iterator = store.getProducts();
-		System.out.println("List of products (name, ID, On Hands, current price, reorder level)");
-		while (iterator.hasNext()) {
-			Result result = iterator.next();
-			System.out.println(result.getProductName() + " " + result.getOrderID() + " " + result.getProductStock()
-					+ " " + result.getProductPrice() + " " + result.getProductReorderLevel());
+	public void getAllProductInfo() {
+		// product name, id, stock in hand, current price, and a reorder level
+		Request.instance().setProductName("");
+		Iterator<Product> products = Store.instance().getAllProduct();
+		while (products.hasNext()) {
+			// product name, product id, price, stock in hand, and reorder level.
+			Product product = products.next();
+			System.out.println();
+			System.out.println("Product Name: " + product.getName());
+			System.out.println("Product ID: " + product.getID());
+			System.out.println("Product Stock: " + product.getStock());
+			System.out.println("Product Price: " + product.getPrice());
+			System.out.println("Product Reorder Level: " + product.getReorderLevel());
+
 		}
-		System.out.println("End of listing");
+
 	}
 
-	private void save() {
-		if (store.save()) {
-			System.out.println(" The store has been successfully saved in the file StoreData \n");
-		} else {
-			System.out.println(" There has been an error in saving \n");
-		}
+	/**
+	 * Store all the infomation on disk
+	 */
+	public void save() {
+		Store.instance().save();
 	}
 
+	/**
+	 * ask for command and process the method corresponding to it.
+	 */
 	public void menu() {
 		int command;
 		help();
-		while ((command = Integer.parseInt(getInput("Type in command: "))) != EXIT) {
+		while ((command = getInputInt("Type in command: ")) != EXIT) {
 			switch (command) {
 			case EXIT:
-				System.out.println(EXIT);
+				System.exit(0);
 				break;
 			case ENROLL_MEMBER:
 				enrollMember();
@@ -357,32 +402,32 @@ public class UserInterface {
 			case ADD_PRODUCT:
 				addProduct();
 				break;
-			case CHECK_ITEM:
-				System.out.println(CHECK_ITEM);
+			case CHECK_OUT_ITEM:
+				checkOut();
 				break;
 			case PROCESS_SHIPMENT:
-				processShipment();
+				processShippment();
 				break;
 			case CHANGE_PRICE:
 				changePrice();
 				break;
 			case GET_PRODUCT_INFO:
-				retrieveProductInfo();
+				getProductInfo();
 				break;
 			case GET_MEMBER_INFO:
 				getMemberInfo();
 				break;
 			case PRINT_TRANSACTION:
-				getTransactions();
+				printTransaction();
 				break;
 			case LIST_OUTSTANDINGS:
-				System.out.println(LIST_OUTSTANDINGS);
+				listOutstandings();
 				break;
 			case LIST_ALL_MEMBERS:
 				listAllMembers();
 				break;
 			case LIST_ALL_PRODUCTS:
-				getProducts();
+				getAllProductInfo();
 				break;
 			case SAVE:
 				save();

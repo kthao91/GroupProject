@@ -20,15 +20,13 @@ public class Member {
 	private String phone;
 	private String id;
 	private List<Transaction> transactions = new LinkedList<Transaction>();
-	private Date dateJoined;
-	// private List<Transaction> transactions = new LinkedList<Transaction>();
 
 	public Member(String name, String address, String phone) {
 		this.name = name;
 		this.address = address;
 		this.phone = phone;
 		id = MEMBER_STRING + ++idCounter;
-		dateJoined = new Date();
+		new Date();
 	}
 
 	/**
