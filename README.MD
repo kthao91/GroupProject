@@ -2,15 +2,15 @@
 
 **Goals:**
 
-* 1. Perform use-case analysis techniques to discover and specify the conceptual
+* Perform use-case analysis techniques to discover and specify the conceptual
 classes.
-* 2. Use design principles to translate conceptual class design into an appropriate set of
+* Use design principles to translate conceptual class design into an appropriate set of
 abstract and concrete classes and interfaces
-* 3. Efficiently develop systems using design patterns, including Facade and Singleton
-* 4. Use the Unified Modeling Language to document work
-* 5. Implement a design utilizing structures such as classes and interfaces,
-* 6. Work in small groups
-* 7. Employ Java coding standards
+* Efficiently develop systems using design patterns, including Facade and Singleton
+* Use the Unified Modeling Language to document work
+* Implement a design utilizing structures such as classes and interfaces,
+* Work in small groups
+* Employ Java coding standards
 
 **The Problem**
 
@@ -19,14 +19,14 @@ requirements described below.
 A small co-op grocery store works by having members join it by paying a certain fee. The
 business processes (12 in number) /system functionalities are:
 
-* 1) Enroll a member: the system enrolls a member and remembers him/her; it keeps track of
+* Enroll a member: the system enrolls a member and remembers him/her; it keeps track of
 the name, address, phone number, date joined, and the fee paid. Also, the system creates
 and maintains a unique id for each member. Only one member is added when this
 functionality is invoked.
-* 2) Remove a member: If a valid id is received, the corresponding member is removed;
+* Remove a member: If a valid id is received, the corresponding member is removed;
 the system would need the member’s id for this purpose. Only one member is removed
 when this functionality is invoked.
-* 3) Add a product: From time to time, the store decides to carry a new set of products.
+* Add a product: From time to time, the store decides to carry a new set of products.
 Relevant attributes input by the user are: product name, id, stock in hand, current price,
 and a reorder level for the product. Once the quantity in stock reaches the reorder level or
 below, the product will be automatically reordered. No two products have the same name.
@@ -35,7 +35,7 @@ milk” and “Unsafeway coconut milk.” Only one product is added when this fu
 is invoked. Immediately after a new product is created, the system generates an order for
 the product for twice the reorder level. As an example, suppose we have a new product “1 lb packets of Milano Pasta” with a
 reorder level of 100 lb, When the product is created, 200 lbs. of the product are ordered.
-* 4) Check out a member’ items: The member comes to the check-out counter with a cart
+* Check out a member’ items: The member comes to the check-out counter with a cart
 of grocery items. The cashier inputs the product id and quantity of each item in the cart.
 The system computes the price and, of course, computes the total price. All members pay
 by cash. The system must display the individual items, the number of units, unit price,
@@ -47,31 +47,31 @@ When a customer is checked out, reorder twice the reorder level for any product 
 level reaches the reorder level (or below that value). The system must display a message
 saying that the item will be reordered, how much was reordered, and what the order
 number is.
-* 5) Process shipment: Whenever there is delivery of items from a supplier, the stocks
+* Process shipment: Whenever there is delivery of items from a supplier, the stocks
 must be updated. The system needs the order number. We assume that the quantity
 ordered has been delivered. Multiple products may be processed, one by one. Display the
 product id, name, and the new stock.
-* 6) Change price: Changes the price of a product given its id. The system displays the
+* Change price: Changes the price of a product given its id. The system displays the
 product name and the new price.
-* 7) Retrieve product info: Given a string, list all products with name that starts with this
+* Retrieve product info: Given a string, list all products with name that starts with this
 string. List the product name, product id, price, stock in hand, and reorder level.
-* 8) Retrieve member info: Given a string, the system displays the member’s address, fee
+* Retrieve member info: Given a string, the system displays the member’s address, fee
 paid, and id of all members whose name begins with the given string. In general, there
 will be multiple members listed.
-* 9) Print transactions: Given the id of a member and two dates (input in the mm/dd/yyyy
+* Print transactions: Given the id of a member and two dates (input in the mm/dd/yyyy
 format), the system prints all transactions for the corresponding member between the two
 dates (including both dates). The first date input by the actor must be validated to ensure
 that it equal to or earlier than the second date.
-* 10) List all outstanding (not yet fulfilled) orders: Display the order id, corresponding
+* List all outstanding (not yet fulfilled) orders: Display the order id, corresponding
 product name, date of order, and quantity ordered.
-* 11) List all members. Display the name, date joined, address, and phone number.
-* 12) List all products. Display the product name, id, stock in hand, current price, and a
+* List all members. Display the name, date joined, address, and phone number.
+* 1List all products. Display the product name, id, stock in hand, current price, and a
 reorder level for the product
 The following could be considered business processes, perhaps, but let us not treat them that
 way. They form part of the functionality of the system.
-* 13) Save: Saves all data to disk.
-* 14) Help: Displays a list of commands.
-* 0) Exit: Quits the application.
+* Save: Saves all data to disk.
+* Help: Displays a list of commands.
+* Exit: Quits the application.
 
 Make sure that wherever there is reasonable common functionality, factor out code fragments
 from similar classes and move them to/create super classes. Use generics where applicable.
@@ -81,8 +81,9 @@ from similar classes and move them to/create super classes. Use generics where a
 For the purposes of ensuring uniformity in grading, I ask the following.
 The interface must be non-GUI, but command driven, just like the library system.
 I should be able to invoke the business processes by typing in a number as listed under
-the business processes above: 1 for adding members, 2 for removing members, etc.
-and 13 for saving data to disk. Also use 0 for exit and 14 for help.
+the business processes above: 
+
+1 for adding members, 2 for removing members, etc and 13 for saving data to disk. Also use 0 for exit and 14 for help.
 2. When the program starts, it should give an option to look for and load existing data
 on stable storage. If the user answers in the affirmative, that data should be loaded
 and used. Do not assume any specific directory structure on my system: use the
@@ -104,12 +105,12 @@ If the user answers y or yes:
 numbered 1 through 6. Using assert statements, it checks the return values and ensure that
 the returned values are correct. This step should be a thorough test of business processes
 numbered 1-6.
-4
 3) After the automated testing processing is complete, there should be at least 20 products
 and 5 members. There should have been at least a couple of outstanding orders, multiple
 products (at least 3 or 4) starting with the same sequence of 2-4 characters.
 4) Finally, the program presents the command line interface, so the user can enter more test
 data using the interactive approach. The test bed from Step (3) must be available for
 testing in Step 4.
+
 You may have to put the automated tester class in the business package, if you have provided
 restricted view of business objects in the ui packag
